@@ -1,39 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Nine — Group Photo</title>
-
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OUR NINE</title>
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}body{margin:0;background:#070a12;color:#fff;font-family:Arial,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:18px}.hero{text-align:center;padding:25px}.hero h1{font-size:60px;margin:0;font-weight:900}.hero p{color:#9da8bd}
+.panel{background:#101622;border:1px solid #29354d;border-radius:24px;padding:18px;margin:16px 0}
+select,input,button{width:100%;padding:14px;margin:7px 0;border-radius:12px;font:inherit}
+select,input{background:#080d17;color:white;border:1px solid #34415b}button{border:0;background:white;color:#080a10;font-weight:bold;cursor:pointer}
+.status{text-align:center;color:#aab5ca;min-height:22px}.final{background:radial-gradient(circle at top,#293f79,#101a2d 45%,#080b14);border-radius:22px;padding:20px}
+.title{text-align:center;margin-bottom:18px}.title h2{font-size:35px;margin:0}.title span{color:#aeb9cf;font-size:12px;letter-spacing:2px}
+.leader{text-align:center;margin-bottom:20px}.leader .photo{width:190px;height:190px;margin:auto;border:5px solid white;border-radius:50%;overflow:hidden;background:#0a101d}
+.photo img{width:100%;height:100%;object-fit:cover}.placeholder{height:100%;display:flex;align-items:center;justify-content:center;color:#59667f;font-size:12px}
+.name{font-weight:bold;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.card{background:#111a2a;border:1px solid #2a3852;border-radius:14px;padding:7px;text-align:center}.card .photo{aspect-ratio:1;border-radius:10px;overflow:hidden;background:#080d17}.card .name{font-size:11px;color:#c5cede}
+.count{text-align:center;color:#8e9ab0;font-size:12px;margin:15px}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.leader .photo{width:155px;height:155px}.hero h1{font-size:44px}}
+</style></head><body>
+<div class="wrap">
+<div class="hero"><h1>OUR NINE</h1><p>One group. Nine people. One memory.</p></div>
+<div class="panel"><h2>Upload Your Photo</h2>
+<select id="member">
+<option value="leader">👑 Leader</option>
+<option value="member_1">Member 1</option><option value="member_2">Member 2</option>
+<option value="member_3">Member 3</option><option value="member_4">Member 4</option>
+<option value="member_5">Member 5</option><option value="member_6">Member 6</option>
+<option value="member_7">Member 7</option><option value="member_8">Member 8</option>
+</select>
+<input id="photo" type="file" accept="image/*"><button id="upload">UPLOAD PHOTO</button>
+<div class="status" id="status"></div></div>
+
+<div class="panel"><div class="final" id="final">
+<div class="title"><h2>OUR NINE</h2><span>OUR GROUP • 2026</span></div>
+<div class="leader"><div class="photo" id="leader"><div class="placeholder">LEADER PHOTO</div></div><div class="name">👑 Leader</div></div>
+<div class="grid">
+<div class="card"><div class="photo" id="member_1"><div class="placeholder">PHOTO</div></div><div class="name">Member 1</div></div>
+<div class="card"><div class="photo" id="member_2"><div class="placeholder">PHOTO</div></div><div class="name">Member 2</div></div>
+<div class="card"><div class="photo" id="member_3"><div class="placeholder">PHOTO</div></div><div class="name">Member 3</div></div>
+<div class="card"><div class="photo" id="member_4"><div class="placeholder">PHOTO</div></div><div class="name">Member 4</div></div>
+<div class="card"><div class="photo" id="member_5"><div class="placeholder">PHOTO</div></div><div class="name">Member 5</div></div>
+<div class="card"><div class="photo" id="member_6"><div class="placeholder">PHOTO</div></div><div class="name">Member 6</div></div>
+<div class="card"><div class="photo" id="member_7"><div class="placeholder">PHOTO</div></div><div class="name">Member 7</div></div>
+<div class="card"><div class="photo" id="member_8"><div class="placeholder">PHOTO</div></div><div class="name">Member 8</div></div>
+</div><div class="count" id="count">0 / 9 photos uploaded</div>
+</div><button id="download">DOWNLOAD FINAL GROUP PHOTO</button></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+const SUPABASE_URL="https://llhsfopzgotrdsbavjxy.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsaHNmb3B6Z290cmRzYmF2anh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTE0MDksImV4cCI6MjEwMjU2NzQwOX0.KYIgNKRmCU8MCJM07Q4utU021jOGj3V2fpY-Lc3QkEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const names={leader:["Leader","Leader"],member_1:["Member 1","Member"],member_2:["Member 2","Member"],member_3:["Member 3","Member"],member_4:["Member 4","Member"],member_5:["Member 5","Member"],member_6:["Member 6","Member"],member_7:["Member 7","Member"],member_8:["Member 8","Member"]};
+
+async function loadPhotos(){
+ const r=await db.from("group_photos").select("*");
+ if(r.error){status.textContent=r.error.message;return}
+ Object.keys(names).forEach(id=>document.getElementById(id).innerHTML='<div class="placeholder">PHOTO</div>');
+ (r.data||[]).forEach(p=>{const s=document.getElementById(p.member_id);if(!s)return;s.innerHTML="";const i=document.createElement("img");i.src=p.public_url;i.alt=p.member_name;s.appendChild(i)});
+ document.getElementById("count").textContent=(r.data||[]).length+" / 9 photos uploaded";
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #070b14;
-    color: white;
-}
+document.getElementById("upload").onclick=async()=>{
+ const member=document.getElementById("member").value,file=document.getElementById("photo").files[0],status=document.getElementById("status");
+ if(!file){status.textContent="Choose a photo first.";return}
+ if(!file.type.startsWith("image/")){status.textContent="Please choose an image.";return}
+ if(file.size>10*1024*1024){status.textContent="Maximum file size is 10 MB.";return}
+ document.getElementById("upload").disabled=true;status.textContent="Uploading...";
+ const old=await db.from("group_photos").select("id,file_path").eq("member_id",member).maybeSingle();
+ if(old.data){await db.storage.from("group-photos").remove([old.data.file_path]);await db.from("group_photos").delete().eq("member_id",member)}
+ const ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=member+"-"+crypto.randomUUID()+"."+ext;
+ const up=await db.storage.from("group-photos").upload(path,file,{contentType:file.type});
+ if(up.error){status.textContent=up.error.message;document.getElementById("upload").disabled=false;return}
+ const url=db.storage.from("group-photos").getPublicUrl(path).data.publicUrl;
+ const ins=await db.from("group_photos").insert({member_id:member,member_name:names[member][0],member_role:names[member][1],file_path:path,public_url:url});
+ if(ins.error){status.textContent=ins.error.message;document.getElementById("upload").disabled=false;return}
+ status.textContent="Uploaded successfully!";document.getElementById("photo").value="";document.getElementById("upload").disabled=false;loadPhotos();
+};
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-}
-
-header {
-    text-align: center;
-    padding: 25px 10px;
-}
-
-header h1 {
-    font-size: 48px;
-    margin: 0;
-    font-weight: 900;
-    letter-spacing: -2px;
-}
+document.getElementById("download").onclick=async()=>{
+ const canvas=await html2canvas(document.getElementById("final"),{scale:2,useCORS:true,backgroundColor:null});
+ const a=document.createElement("a");a.download="OUR-NINE-Group-Photo.png";a.href=canvas.toDataURL("image/png");a.click();
+};
+loadPhotos();
+</script></body></html>
 
 header p {
     color: #9da8bd;
