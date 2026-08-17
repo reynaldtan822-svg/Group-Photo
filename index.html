@@ -1,152 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our 9 — Group Photo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#080b14;color:#fff}
-    .wrap{max-width:1100px;margin:auto;padding:24px}.hero{padding:34px 0 20px;text-align:center}
-    .badge{display:inline-block;padding:7px 12px;border:1px solid #33405f;border-radius:999px;color:#a9b8df;font-size:12px}
-    h1{font-size:clamp(36px,8vw,72px);line-height:.95;margin:18px 0 12px;letter-spacing:-3px}
-    .sub{color:#aab2c7;max-width:650px;margin:auto;line-height:1.6}
-    .panel{background:#101522;border:1px solid #202b42;border-radius:24px;padding:20px;margin-top:24px;box-shadow:0 20px 70px #0005}
-    .members{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .member{padding:14px;border:1px solid #29344c;border-radius:16px;background:#0b101c}
-    .role{font-size:11px;color:#7f8ba8;text-transform:uppercase;letter-spacing:1px}.member strong{display:block;margin-top:5px}
-    .upload{margin-top:20px;text-align:center;border:2px dashed #33405f;border-radius:20px;padding:30px 16px;background:#0b101b}
-    input,select{display:block;width:100%;padding:13px;border-radius:12px;border:1px solid #33405f;background:#080d18;color:#fff;margin:8px 0 12px}
-    button{border:0;border-radius:12px;padding:13px 18px;background:#fff;color:#080b14;font-weight:800;cursor:pointer}
-    button:disabled{opacity:.5;cursor:not-allowed}.status{margin-top:12px;color:#aeb9d2;min-height:22px}
-    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
-    .card{background:#0b101b;border:1px solid #29344c;border-radius:16px;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-    .caption{padding:10px 12px;font-size:12px;color:#b5bfd3}.empty{color:#78839b;text-align:center;padding:30px}
-    .toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-    .hint{font-size:12px;color:#7f8ba8}.footer{text-align:center;color:#66718a;padding:30px 0;font-size:12px}
-    @media(max-width:650px){.members,.gallery{grid-template-columns:1fr 1fr}.wrap{padding:14px}.panel{padding:15px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Nine — Group Photo</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #070b14;
+    color: white;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 25px 10px;
+}
+
+header h1 {
+    font-size: 48px;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: -2px;
+}
+
+header p {
+    color: #9da8bd;
+}
+
+.panel {
+    background: #101624;
+    border: 1px solid #273249;
+    border-radius: 22px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: 1px solid #34405a;
+    background: #080d18;
+    color: white;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    color: #080b14;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+/* FINAL GROUP PHOTO */
+
+.group-photo {
+    background:
+        radial-gradient(circle at top, #263b72, #0b101c 55%);
+    border-radius: 25px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.group-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.group-title h2 {
+    font-size: 35px;
+    margin: 0;
+}
+
+.group-title p {
+    color: #aeb9ce;
+}
+
+/* LEADER */
+
+.leader-slot {
+    width: 180px;
+    height: 180px;
+    margin: auto;
+    border-radius: 50%;
+    border: 5px solid white;
+    overflow: hidden;
+    background: #151d2e;
+    position: relative;
+}
+
+.leader-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.leader-name {
+    text-align: center;
+    margin: 10px 0 20px;
+    font-weight: bold;
+}
+
+/* MEMBERS */
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.member-card {
+    background: #121a29;
+    border-radius: 15px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #2c3850;
+}
+
+.member-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 11px;
+    overflow: hidden;
+    background: #080d18;
+}
+
+.member-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-name {
+    font-size: 12px;
+    margin-top: 8px;
+    color: #c8d0df;
+}
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #56627a;
+    font-size: 12px;
+}
+
+.status {
+    text-align: center;
+    color: #9da8bd;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+@media(max-width:600px) {
+
+    header h1 {
+        font-size: 40px;
+    }
+
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .leader-slot {
+        width: 150px;
+        height: 150px;
+    }
+}
+</style>
 </head>
+
 <body>
-<div class="wrap">
-  <section class="hero">
-    <span class="badge">9 MEMBERS • SHARED GROUP PHOTO</span>
+
+<div class="container">
+
+<header>
     <h1>OUR NINE</h1>
-    <p class="sub">One link for everyone. Each member chooses their name, uploads a photo, and the whole group can see the collection.</p>
-  </section>
+    <p>One group. Nine people. One memory.</p>
+</header>
 
-  <section class="panel">
-    <div class="members" id="members"></div>
+<div class="panel">
 
-    <div class="upload">
-      <h2>Upload your photo</h2>
-      <p class="hint">Choose your name first, then select your best group/photo shot.</p>
-      <select id="memberSelect"></select>
-      <input id="photoInput" type="file" accept="image/*">
-      <button id="uploadBtn">UPLOAD PHOTO</button>
-      <div class="status" id="status"></div>
+    <h2>Upload Your Photo</h2>
+
+    <select id="memberSelect">
+        <option value="Leader">👑 Leader</option>
+        <option value="Member 1">Member 1</option>
+        <option value="Member 2">Member 2</option>
+        <option value="Member 3">Member 3</option>
+        <option value="Member 4">Member 4</option>
+        <option value="Member 5">Member 5</option>
+        <option value="Member 6">Member 6</option>
+        <option value="Member 7">Member 7</option>
+        <option value="Member 8">Member 8</option>
+    </select>
+
+    <input
+        type="file"
+        id="photoInput"
+        accept="image/*"
+    >
+
+    <button onclick="uploadPhoto()">
+        UPLOAD PHOTO
+    </button>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<div class="panel">
+
+<div class="group-photo" id="groupPhoto">
+
+    <div class="group-title">
+        <h2>OUR NINE</h2>
+        <p>OUR GROUP • 2026</p>
     </div>
-  </section>
 
-  <section class="panel">
-    <div class="toolbar">
-      <div><h2 style="margin:0">Photo Wall</h2><span class="hint">Shared gallery</span></div>
-      <button onclick="loadPhotos()">REFRESH</button>
+    <!-- LEADER -->
+
+    <div class="leader-slot" id="Leader">
+        <div class="empty">
+            LEADER
+        </div>
     </div>
-    <div class="gallery" id="gallery"><div class="empty">Loading photos…</div></div>
-  </section>
 
-  <div class="footer">OUR NINE • Made for your group</div>
+    <div class="leader-name">
+        👑 Leader
+    </div>
+
+    <!-- MEMBERS -->
+
+    <div class="members-grid">
+
+        <div class="member-card">
+            <div class="member-photo" id="Member1">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 1</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member2">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 2</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member3">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 3</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member4">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 4</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member5">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 5</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member6">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 6</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member7">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 7</div>
+        </div>
+
+        <div class="member-card">
+            <div class="member-photo" id="Member8">
+                <div class="empty">PHOTO</div>
+            </div>
+            <div class="member-name">Member 8</div>
+        </div>
+
+    </div>
+
+</div>
+
+<button onclick="downloadGroupPhoto()">
+    📥 DOWNLOAD FINAL GROUP PHOTO
+</button>
+
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-/* ================================
-   1) PUT YOUR SUPABASE DETAILS HERE
-   2) Replace the 9 names below
-================================ */
+
 const SUPABASE_URL = "https://llhsfopzgotrdsbavjxy.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsaHNmb3B6Z290cmRzYmF2anh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTE0MDksImV4cCI6MjEwMjU2NzQwOX0.KYIgNKRmCU8MCJM07Q4utU021jOGj3V2fpY-Lc3QkEY";
 
-const MEMBERS = [
-  {role:"Leader", name:"Member 1"},
-  {role:"Member", name:"Member 2"},
-  {role:"Member", name:"Member 3"},
-  {role:"Member", name:"Member 4"},
-  {role:"Member", name:"Member 5"},
-  {role:"Member", name:"Member 6"},
-  {role:"Member", name:"Member 7"},
-  {role:"Member", name:"Member 8"},
-  {role:"Member", name:"Member 9"}
-];
+const SUPABASE_ANON_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsaHNmb3B6Z290cmRzYmF2anh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTE0MDksImV4cCI6MjEwMjU2NzQwOX0.KYIgNKRmCU8MCJM07Q4utU021jOGj3V2fpY-Lc3QkEY";
 
-const configured = !SUPABASE_URL.includes("YOUR_") && !SUPABASE_ANON_KEY.includes("YOUR_");
-const db = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const db =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
-const membersEl = document.getElementById("members");
-const selectEl = document.getElementById("memberSelect");
-const galleryEl = document.getElementById("gallery");
-const statusEl = document.getElementById("status");
-const uploadBtn = document.getElementById("uploadBtn");
 
-function renderMembers(){
-  membersEl.innerHTML = MEMBERS.map(m => `
-    <div class="member"><div class="role">${m.role}</div><strong>${escapeHtml(m.name)}</strong></div>
-  `).join("");
-  selectEl.innerHTML = MEMBERS.map((m,i) =>
-    `<option value="${i}">${escapeHtml(m.role)} — ${escapeHtml(m.name)}</option>`
-  ).join("");
+/* UPLOAD */
+
+async function uploadPhoto() {
+
+    const member =
+        document.getElementById(
+            "memberSelect"
+        ).value;
+
+    const file =
+        document.getElementById(
+            "photoInput"
+        ).files[0];
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+    if (!file) {
+
+        status.innerText =
+            "Please select a photo.";
+
+        return;
+    }
+
+    status.innerText =
+        "Uploading...";
+
+    const extension =
+        file.name
+        .split(".")
+        .pop();
+
+    const fileName =
+        crypto.randomUUID()
+        + "."
+        + extension;
+
+    const path =
+        fileName;
+
+
+    const upload =
+        await db.storage
+        .from("group-photos")
+        .upload(
+            path,
+            file,
+            {
+                contentType:
+                    file.type
+            }
+        );
+
+
+    if (upload.error) {
+
+        status.innerText =
+            upload.error.message;
+
+        return;
+    }
+
+
+    const publicURL =
+        db.storage
+        .from("group-photos")
+        .getPublicUrl(path)
+        .data.publicUrl;
+
+
+    const insert =
+        await db
+        .from("group_photos")
+        .insert({
+
+            member_name:
+                member,
+
+            member_role:
+                member === "Leader"
+                ? "Leader"
+                : "Member",
+
+            file_path:
+                path,
+
+            public_url:
+                publicURL
+
+        });
+
+
+    if (insert.error) {
+
+        status.innerText =
+            insert.error.message;
+
+        return;
+    }
+
+
+    status.innerText =
+        "Photo uploaded successfully!";
+
+    document.getElementById(
+        "photoInput"
+    ).value = "";
+
+    loadPhotos();
 }
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 
-async function loadPhotos(){
-  if(!configured){
-    galleryEl.innerHTML = `<div class="empty">Supabase is not configured yet. Add your URL and anon key in index.html.</div>`;
-    return;
-  }
-  galleryEl.innerHTML = `<div class="empty">Loading…</div>`;
-  const {data,error} = await db.from("group_photos").select("*").order("created_at",{ascending:false});
-  if(error){ galleryEl.innerHTML=`<div class="empty">Could not load photos: ${escapeHtml(error.message)}</div>`; return; }
-  if(!data.length){galleryEl.innerHTML=`<div class="empty">No photos yet. Be the first to upload!</div>`;return;}
-  galleryEl.innerHTML = data.map(p => `
-    <div class="card">
-      <img src="${p.public_url}" alt="${escapeHtml(p.member_name)}" loading="lazy">
-      <div class="caption">${escapeHtml(p.member_role)} • ${escapeHtml(p.member_name)}</div>
-    </div>
-  `).join("");
+
+/* LOAD PHOTOS */
+
+async function loadPhotos() {
+
+    const result =
+        await db
+        .from("group_photos")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending: true
+            }
+        );
+
+
+    if (result.error) {
+
+        console.log(
+            result.error
+        );
+
+        return;
+    }
+
+
+    result.data.forEach(photo => {
+
+        let id =
+            photo.member_name
+            .replace(" ", "");
+
+
+        const slot =
+            document.getElementById(id);
+
+
+        if (!slot) return;
+
+
+        slot.innerHTML = "";
+
+
+        const img =
+            document.createElement("img");
+
+        img.src =
+            photo.public_url;
+
+        img.alt =
+            photo.member_name;
+
+
+        slot.appendChild(img);
+
+    });
+
 }
 
-uploadBtn.onclick = async () => {
-  if(!configured){statusEl.textContent="Please configure Supabase first.";return;}
-  const file = document.getElementById("photoInput").files[0];
-  const member = MEMBERS[Number(selectEl.value)];
-  if(!file){statusEl.textContent="Choose a photo first.";return;}
-  if(!file.type.startsWith("image/")){statusEl.textContent="Please select an image.";return;}
-  if(file.size > 10 * 1024 * 1024){statusEl.textContent="Maximum file size is 10 MB.";return;}
 
-  uploadBtn.disabled=true; statusEl.textContent="Uploading…";
-  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `${crypto.randomUUID()}.${ext}`;
+/* DOWNLOAD */
 
-  const {error: uploadError} = await db.storage.from("group-photos").upload(path,file,{contentType:file.type,upsert:false});
-  if(uploadError){statusEl.textContent="Upload failed: "+uploadError.message;uploadBtn.disabled=false;return;}
+async function downloadGroupPhoto() {
 
-  const {data:urlData} = db.storage.from("group-photos").getPublicUrl(path);
-  const {error: rowError} = await db.from("group_photos").insert({
-    member_name:member.name, member_role:member.role, file_path:path, public_url:urlData.publicUrl
-  });
-  if(rowError){statusEl.textContent="Photo uploaded but gallery record failed: "+rowError.message;uploadBtn.disabled=false;return;}
+    alert(
+        "Final image download will be enabled in the next version."
+    );
 
-  statusEl.textContent="Photo uploaded successfully! 🎉";
-  document.getElementById("photoInput").value="";
-  uploadBtn.disabled=false;
-  loadPhotos();
-};
+}
 
-renderMembers();
+
 loadPhotos();
+
 </script>
+
 </body>
 </html>
