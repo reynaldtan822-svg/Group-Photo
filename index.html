@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our 9 — Group Photo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#080b14;color:#fff}
+    .wrap{max-width:1100px;margin:auto;padding:24px}.hero{padding:34px 0 20px;text-align:center}
+    .badge{display:inline-block;padding:7px 12px;border:1px solid #33405f;border-radius:999px;color:#a9b8df;font-size:12px}
+    h1{font-size:clamp(36px,8vw,72px);line-height:.95;margin:18px 0 12px;letter-spacing:-3px}
+    .sub{color:#aab2c7;max-width:650px;margin:auto;line-height:1.6}
+    .panel{background:#101522;border:1px solid #202b42;border-radius:24px;padding:20px;margin-top:24px;box-shadow:0 20px 70px #0005}
+    .members{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .member{padding:14px;border:1px solid #29344c;border-radius:16px;background:#0b101c}
+    .role{font-size:11px;color:#7f8ba8;text-transform:uppercase;letter-spacing:1px}.member strong{display:block;margin-top:5px}
+    .upload{margin-top:20px;text-align:center;border:2px dashed #33405f;border-radius:20px;padding:30px 16px;background:#0b101b}
+    input,select{display:block;width:100%;padding:13px;border-radius:12px;border:1px solid #33405f;background:#080d18;color:#fff;margin:8px 0 12px}
+    button{border:0;border-radius:12px;padding:13px 18px;background:#fff;color:#080b14;font-weight:800;cursor:pointer}
+    button:disabled{opacity:.5;cursor:not-allowed}.status{margin-top:12px;color:#aeb9d2;min-height:22px}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+    .card{background:#0b101b;border:1px solid #29344c;border-radius:16px;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    .caption{padding:10px 12px;font-size:12px;color:#b5bfd3}.empty{color:#78839b;text-align:center;padding:30px}
+    .toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+    .hint{font-size:12px;color:#7f8ba8}.footer{text-align:center;color:#66718a;padding:30px 0;font-size:12px}
+    @media(max-width:650px){.members,.gallery{grid-template-columns:1fr 1fr}.wrap{padding:14px}.panel{padding:15px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <span class="badge">9 MEMBERS • SHARED GROUP PHOTO</span>
+    <h1>OUR NINE</h1>
+    <p class="sub">One link for everyone. Each member chooses their name, uploads a photo, and the whole group can see the collection.</p>
+  </section>
+
+  <section class="panel">
+    <div class="members" id="members"></div>
+
+    <div class="upload">
+      <h2>Upload your photo</h2>
+      <p class="hint">Choose your name first, then select your best group/photo shot.</p>
+      <select id="memberSelect"></select>
+      <input id="photoInput" type="file" accept="image/*">
+      <button id="uploadBtn">UPLOAD PHOTO</button>
+      <div class="status" id="status"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="toolbar">
+      <div><h2 style="margin:0">Photo Wall</h2><span class="hint">Shared gallery</span></div>
+      <button onclick="loadPhotos()">REFRESH</button>
+    </div>
+    <div class="gallery" id="gallery"><div class="empty">Loading photos…</div></div>
+  </section>
+
+  <div class="footer">OUR NINE • Made for your group</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ================================
+   1) PUT YOUR SUPABASE DETAILS HERE
+   2) Replace the 9 names below
+================================ */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const MEMBERS = [
+  {role:"Leader", name:"Member 1"},
+  {role:"Member", name:"Member 2"},
+  {role:"Member", name:"Member 3"},
+  {role:"Member", name:"Member 4"},
+  {role:"Member", name:"Member 5"},
+  {role:"Member", name:"Member 6"},
+  {role:"Member", name:"Member 7"},
+  {role:"Member", name:"Member 8"},
+  {role:"Member", name:"Member 9"}
+];
+
+const configured = !SUPABASE_URL.includes("YOUR_") && !SUPABASE_ANON_KEY.includes("YOUR_");
+const db = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+const membersEl = document.getElementById("members");
+const selectEl = document.getElementById("memberSelect");
+const galleryEl = document.getElementById("gallery");
+const statusEl = document.getElementById("status");
+const uploadBtn = document.getElementById("uploadBtn");
+
+function renderMembers(){
+  membersEl.innerHTML = MEMBERS.map(m => `
+    <div class="member"><div class="role">${m.role}</div><strong>${escapeHtml(m.name)}</strong></div>
+  `).join("");
+  selectEl.innerHTML = MEMBERS.map((m,i) =>
+    `<option value="${i}">${escapeHtml(m.role)} — ${escapeHtml(m.name)}</option>`
+  ).join("");
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+
+async function loadPhotos(){
+  if(!configured){
+    galleryEl.innerHTML = `<div class="empty">Supabase is not configured yet. Add your URL and anon key in index.html.</div>`;
+    return;
+  }
+  galleryEl.innerHTML = `<div class="empty">Loading…</div>`;
+  const {data,error} = await db.from("group_photos").select("*").order("created_at",{ascending:false});
+  if(error){ galleryEl.innerHTML=`<div class="empty">Could not load photos: ${escapeHtml(error.message)}</div>`; return; }
+  if(!data.length){galleryEl.innerHTML=`<div class="empty">No photos yet. Be the first to upload!</div>`;return;}
+  galleryEl.innerHTML = data.map(p => `
+    <div class="card">
+      <img src="${p.public_url}" alt="${escapeHtml(p.member_name)}" loading="lazy">
+      <div class="caption">${escapeHtml(p.member_role)} • ${escapeHtml(p.member_name)}</div>
+    </div>
+  `).join("");
+}
+
+uploadBtn.onclick = async () => {
+  if(!configured){statusEl.textContent="Please configure Supabase first.";return;}
+  const file = document.getElementById("photoInput").files[0];
+  const member = MEMBERS[Number(selectEl.value)];
+  if(!file){statusEl.textContent="Choose a photo first.";return;}
+  if(!file.type.startsWith("image/")){statusEl.textContent="Please select an image.";return;}
+  if(file.size > 10 * 1024 * 1024){statusEl.textContent="Maximum file size is 10 MB.";return;}
+
+  uploadBtn.disabled=true; statusEl.textContent="Uploading…";
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `${crypto.randomUUID()}.${ext}`;
+
+  const {error: uploadError} = await db.storage.from("group-photos").upload(path,file,{contentType:file.type,upsert:false});
+  if(uploadError){statusEl.textContent="Upload failed: "+uploadError.message;uploadBtn.disabled=false;return;}
+
+  const {data:urlData} = db.storage.from("group-photos").getPublicUrl(path);
+  const {error: rowError} = await db.from("group_photos").insert({
+    member_name:member.name, member_role:member.role, file_path:path, public_url:urlData.publicUrl
+  });
+  if(rowError){statusEl.textContent="Photo uploaded but gallery record failed: "+rowError.message;uploadBtn.disabled=false;return;}
+
+  statusEl.textContent="Photo uploaded successfully! 🎉";
+  document.getElementById("photoInput").value="";
+  uploadBtn.disabled=false;
+  loadPhotos();
+};
+
+renderMembers();
+loadPhotos();
+</script>
+</body>
+</html>
